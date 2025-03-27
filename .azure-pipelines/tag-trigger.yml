@@ -1,0 +1,20 @@
+name: TagTrigger_$(Build.SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+
+trigger:
+  tags:
+    include:
+      - "*"  # Trigger on all tags
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - script: |
+      echo "Triggered by tag: $(Build.SourceBranchName)"
+    displayName: 'Print tag info'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: 'README.md'  # Make sure this file exists in the repo
+      ArtifactName: 'tag-trigger-artifact'
+      publishLocation: 'Container'
