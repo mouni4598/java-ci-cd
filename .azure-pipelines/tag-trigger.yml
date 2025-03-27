@@ -3,7 +3,7 @@ name: TagTrigger_$(Build.SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 trigger:
   tags:
     include:
-      - "*"  # Trigger on all tags
+      - "*"  # Trigger on all tags vv
 
 pool:
   vmImage: 'ubuntu-latest'
