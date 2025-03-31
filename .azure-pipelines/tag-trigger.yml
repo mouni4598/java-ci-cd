@@ -4,6 +4,7 @@ trigger:
   tags:
     include:
       - "*"  # Trigger on all tags vv
+pr: none
 
 pool:
   vmImage: 'ubuntu-latest'
