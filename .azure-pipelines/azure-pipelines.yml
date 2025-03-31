@@ -1,0 +1,9 @@
+trigger: none
+
+pr:
+  branches:
+    include:
+      - '*'  # Trigger on all pull requests
+
+pool:
+  vmImage: 'ubuntu-latest'
