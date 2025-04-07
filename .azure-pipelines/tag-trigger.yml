@@ -1,14 +1,27 @@
+name: $(major).$(minor).$(build)
 trigger:
   - main
 
 pool:
   vmImage: 'windows-latest'
 
+
+
+variables:
+  major: 1
+  minor: 101
+  build: $[counter(format('{0}.{1}', variables['major'], variables['minor']), 1)]
+  formattedVersion: '$(major).$(minor).$(build)'
+  solution: 'source/Portal.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+
 steps:
 - powershell: |
     $timestamp = Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ"
     $json = @{
-      version = "$(Build.BuildNumber)"
+      version = "$(formattedVersion)"
       buildTimestamp = $timestamp
       gitBranch = "$(Build.SourceBranchName)"
       gitHash = "$(Build.SourceVersion)"
@@ -20,4 +33,4 @@ steps:
 
     Write-Host "`n📄 Showing contents of version.json:"
     Get-Content -Path "$(Build.ArtifactStagingDirectory)\version.json"
-  displayName: 'Generate version.json with UTC timestamp'
+  displayName: 'Generate version.json using EMS format'
