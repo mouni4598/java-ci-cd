@@ -5,18 +5,19 @@ pool:
   vmImage: 'windows-latest'
 
 steps:
-- script: |
-    echo {
-    echo   "version": "%BUILD_BUILDNUMBER%",
-    echo   "buildTimestamp": "%BUILD_BUILDID%",
-    echo   "gitBranch": "%BUILD_SOURCEBRANCHNAME%",
-    echo   "gitHash": "%BUILD_SOURCEVERSION%"
-    echo } > "$(Build.ArtifactStagingDirectory)\version.json"
+- powershell: |
+    $timestamp = Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ"
+    $json = @{
+      version = "$(Build.BuildNumber)"
+      buildTimestamp = $timestamp
+      gitBranch = "$(Build.SourceBranchName)"
+      gitHash = "$(Build.SourceVersion)"
+    } | ConvertTo-Json -Compress
+    $json | Out-File "$(Build.ArtifactStagingDirectory)\version.json" -Encoding utf8
 
-    echo "📦 Listing contents of build output folder:"
-    dir "$(Build.ArtifactStagingDirectory)"
+    Write-Host "`n📦 Listing contents of build output folder:"
+    Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)"
 
-    echo "📄 Showing contents of version.json:"
-    type "$(Build.ArtifactStagingDirectory)\version.json"
-  displayName: 'Generate version.json and confirm'
-
+    Write-Host "`n📄 Showing contents of version.json:"
+    Get-Content -Path "$(Build.ArtifactStagingDirectory)\version.json"
+  displayName: 'Generate version.json with UTC timestamp'
