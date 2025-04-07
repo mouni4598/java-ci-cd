@@ -1,21 +1,22 @@
-name: TagTrigger_$(Build.SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
-
 trigger:
-  tags:
-    include:
-      - "*"  # Trigger on all tags vv
-pr: none
+  - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
 steps:
-  - script: |
-      echo "Triggered by tag: $(Build.SourceBranchName)"
-    displayName: 'Print tag info'
+- script: |
+    echo {
+    echo   "version": "%BUILD_BUILDNUMBER%",
+    echo   "buildTimestamp": "%BUILD_BUILDID%",
+    echo   "gitBranch": "%BUILD_SOURCEBRANCHNAME%",
+    echo   "gitHash": "%BUILD_SOURCEVERSION%"
+    echo } > "$(Build.ArtifactStagingDirectory)\version.json"
 
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: 'README.md'  # Make sure this file exists in the repo
-      ArtifactName: 'tag-trigger-artifact'
-      publishLocation: 'Container'
+    echo "📦 Listing contents of build output folder:"
+    dir "$(Build.ArtifactStagingDirectory)"
+
+    echo "📄 Showing contents of version.json:"
+    type "$(Build.ArtifactStagingDirectory)\version.json"
+  displayName: 'Generate version.json and confirm'
+
