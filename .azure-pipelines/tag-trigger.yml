@@ -34,3 +34,24 @@ steps:
     Write-Host "`n📄 Showing contents of version.json:"
     Get-Content -Path "$(Build.ArtifactStagingDirectory)\version.json"
   displayName: 'Generate version.json using EMS format'
+
+
+- powershell: |
+    # Install AWS CLI if not already available
+    if (-not (Get-Command "aws" -ErrorAction SilentlyContinue)) {
+      Invoke-WebRequest "https://awscli.amazonaws.com/AWSCLIV2.msi" -OutFile "$env:TEMP\AWSCLIV2.msi"
+      Start-Process msiexec.exe -ArgumentList "/i `"$env:TEMP\AWSCLIV2.msi`" /quiet" -Wait
+    }
+
+    # Set AWS credentials for this session
+    $env:AWS_ACCESS_KEY_ID = "$(AWS_ACCESS_KEY_ID)"
+    $env:AWS_SECRET_ACCESS_KEY = "$(AWS_SECRET_ACCESS_KEY)"
+
+    # Optionally set AWS region
+    $env:AWS_DEFAULT_REGION = "us-east-1"  # Change if needed
+
+    # Upload to S3
+    aws s3 cp "$(Build.ArtifactStagingDirectory)\version.json" "s3://portal-test-alpha-1/compile/version.json" --acl bucket-owner-full-control
+
+    Write-Host "`n✅ version.json uploaded to S3!"
+  displayName: 'Upload version.json to S3'
