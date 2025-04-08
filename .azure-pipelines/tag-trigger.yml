@@ -50,8 +50,8 @@ steps:
     # Optionally set AWS region
     $env:AWS_DEFAULT_REGION = "us-east-1"  # Change if needed
 
-    # Upload to S3
-    aws s3 cp "$(Build.ArtifactStagingDirectory)\version.json" "s3://portal-test-alpha-1/compile/version.json" --acl bucket-owner-full-control
+
+    Get-Content -Path "$(Build.SourcesDirectory)"
 
     Write-Host "`n✅ version.json uploaded to S3!"
   displayName: 'Upload version.json to S3'
