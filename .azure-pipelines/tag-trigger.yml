@@ -49,9 +49,20 @@ steps:
 
     # Optionally set AWS region
     $env:AWS_DEFAULT_REGION = "us-east-1"  # Change if needed
+    # Path to version.json
+    $versionFilePath = "$(Build.ArtifactStagingDirectory)\version.json"
 
+    # Parse version from JSON file
+    $json = Get-Content $versionFilePath | ConvertFrom-Json
+    $version = $json.version
 
-    Get-Content -Path "$(Build.SourcesDirectory)"
+    # Set up versioned folder
+    $targetFolder = "$(Build.ArtifactStagingDirectory)\$version"
+    New-Item -Path $targetFolder -ItemType Directory -Force
+    Move-Item -Path $versionFilePath -Destination "$targetFolder\version.json" -Force
 
-    Write-Host "`n✅ version.json uploaded to S3!"
-  displayName: 'Upload version.json to S3'
+    # Upload folder to S3
+    aws s3 cp "$targetFolder" "s3://portal-test-alpha-1/compile/$version/" --recursive
+
+    Write-Host "`n✅ Uploaded folder '$version' to S3 with version.json inside."
+  displayName: 'Upload versioned folder to S3 using value from version.json'
