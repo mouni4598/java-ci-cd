@@ -1,0 +1,5 @@
+colorama~=0.4.6
+black~=24.8.0
+pyyaml~=5.3.1
+paramiko~=3.4.0
+scp~=0.14.5
