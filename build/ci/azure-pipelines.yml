@@ -1,7 +1,12 @@
-trigger: 
- tags:
-  include:
-    - '*'  # Trigger on all pull requests
+# Configure triggers
+trigger:
+  branches:
+    exclude:
+    - '*'  # Disable branch triggers
+  tags:
+    include:
+    - '*'  # Enable all tag triggers
+
 pr: none
 
 pool:
@@ -14,6 +19,6 @@ steps:
 
   - task: PublishBuildArtifacts@1
     inputs:
-      PathtoPublish: 'README.md'  # Make sure this file exists in the repo
+      PathtoPublish: 'README.md'
       ArtifactName: 'tag-trigger-artifact'
       publishLocation: 'Container'
