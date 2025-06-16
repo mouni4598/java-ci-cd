@@ -1,0 +1,32 @@
+trigger: none
+ 
+pr:
+
+  branches:
+
+    include:
+
+      - '*'  # Trigger on all pull requests
+ 
+pool:
+
+  vmImage: 'ubuntu-latest'
+ 
+steps:
+
+- checkout: self
+
+  displayName: 'Checkout repository'
+ 
+- task: NodeTool@0
+
+  inputs:
+
+    versionSpec: '20.x'
+
+  displayName: 'Install Node.js'
+ 
+- script: npm install
+
+  displayName: 'Install npm dependencies'
+ 
