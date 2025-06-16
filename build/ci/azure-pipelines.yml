@@ -1,5 +1,8 @@
 # Configure triggers
 trigger:
+  branches:
+    exclude:
+    - '*'  # Disable branch triggers
   tags:
     include:
     - '*'  # Enable all tag triggers
