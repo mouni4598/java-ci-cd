@@ -1,0 +1,9 @@
+{
+  "name": "sample-gha-s3",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.js"
+  },
+  "dependencies": {}
+}
