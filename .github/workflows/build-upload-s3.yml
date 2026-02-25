@@ -3,8 +3,7 @@ name: Build and Upload to S3
 on:
   push:
     branches:
-      - main
-      - develop
+      - sample
 
 jobs:
   build_and_upload:
